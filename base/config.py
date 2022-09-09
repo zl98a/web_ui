@@ -6,4 +6,3 @@ rootPath = curPath[:curPath.find("web_ui\\") + len("web_ui\\")]
 
 
 
-print()
