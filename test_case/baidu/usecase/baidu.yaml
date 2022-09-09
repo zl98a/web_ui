@@ -1,0 +1,65 @@
+# 文件名: yaml_case.yaml
+首页:
+  百度搜索:
+    - command: type
+      target: 关键字输入框
+      value: 双11
+    - command: click
+      target: 提交按钮
+      keyword_verify: 123123123123  # 关键字校验
+  百度搜索2:
+    - command: type
+      target: 关键字输入框
+      value: 双12
+    - command: click
+      target: 提交按钮
+      keyword_verify: 90903909  # 关键字校验
+登录_2:
+  验证码登录:
+    - command: click
+      target: 登录按钮
+    - command: click
+      target: 短信登录
+    - command: type
+      target: 手机号
+      value: 1591041683
+    - command: type
+      target: 验证码
+      value: 1234
+  密码登录:
+    - command: click
+      target: 登录按钮
+    - command: click
+      target: 短信登录
+    - command: type
+      target: 手机号
+      value: 1591041683
+    - command: type
+      target: 验证码
+      value: 1234
+  密码登录3:
+    - command: click
+      target: 登录按钮
+    - command: click
+      target: 短信登录
+    - command: type
+      target: 手机号
+      value: 1591041683
+    - command: type
+      target: 验证码
+      value: 1234
+
+
+百度首页:
+  打开百度首页:
+    - command: type
+      target: 关键字输入框
+      value: 双11
+      depend: 首页  # 依赖”首页“模块
+    - command: click
+      target: 提交按钮
+      depend: 首页
+    - command: click
+      target: 百度首页href
+
+
