@@ -15,14 +15,13 @@ from base.email_ import mail  # 发送邮件
 import os
 import datetime
 from base.config import rootPath as root_path
+from base.config import init_page
 
 def main():
     global wait
     driver = webdriver.Edge(executable_path='../../base/web/msedgedriver.exe')
     # 设置等待
     wait = WebDriverWait(driver, 5, 0.5)
-    # 使用匿名函数
-    # wait.until(lambda diver: driver.find_element_by_id('kw'))
     driver.maximize_window()
     yaml_file = 'usecase/yaml_case.yaml'
     items = run_yaml(driver, yaml_file)  # 返回执行结果
@@ -50,8 +49,6 @@ def wait_element(dr, elm_loc):
 def do_click(dr, target, value=None):
     print(f'点击 {target}')
     elm_loc = target.split('=', 1)
-    # wait.until(lambda dr: dr.find_element(*elm_loc))
-    # dr.find_element(*elm_loc).click()
     wait_element(dr, elm_loc).click()
 
 def do_back(dr, target, value=None):
@@ -80,7 +77,7 @@ def execute_case(dr, data):
     for item in data:  # 遍历用例
         item2 = data.get(item)  # 首页-百度搜索
         for item3 in item2:
-            do_open(dr, target='https://baidu.com')  # 每次执行用例前，先初始化到首页
+            do_open(dr, target=init_page)  # 每次执行用例前，先初始化到首页
             print(f'正在执行的用例为:【{item3}】')
             case_results_dict['name'] = item3  # 用例名称
             elements = get_element('elements/baidu_elements.yaml')
@@ -94,7 +91,7 @@ def execute_case(dr, data):
             case = item2.get(item3)  # p
             case_process_list = []  # 用例处理流程
             for step in case:  # 循环遍历用例执行步骤
-                step = packing_parameters(element_dic=step, default_element_dic=element)
+                step = deal_parameters_depend(element_dic=step, default_element_dic=element)
                 command, target, value = packing_parameters2(step)
                 func = command_map.get(command)
                 case_results_dict['执行命令'] = command  # 用例执行命令
@@ -155,7 +152,7 @@ def packing_parameters2(step):
     return command, target, value
 
 
-def packing_parameters(element_dic=None, default_element_dic=None):
+def deal_parameters_depend(element_dic=None, default_element_dic=None):
     """封装参数"""
     try:   # 处理用例依赖
         depend = element_dic['depend']  # 用例之间有依赖
@@ -165,7 +162,7 @@ def packing_parameters(element_dic=None, default_element_dic=None):
         elements = get_element('elements/baidu_elements.yaml')
         element = elements.get(depend)
         del element_dic['depend']  # 局部删除，不会影响文档里的该字段
-        element_dic = packing_parameters(element_dic, element)
+        element_dic = deal_parameters_depend(element_dic, element)
     # 用例组装
     for k, v in element_dic.items():  # {'command': 'type', 'target': 'id=关键字输入框', 'value': '双12'}
         for k2, v2 in default_element_dic.items():  # {'关键字输入框': 'id=kw', '提交按钮': 'id=su'}
@@ -244,7 +241,6 @@ def deleteDuplicate(li):
     """列表-字典去重"""
     temp_list = list(set([str(i) for i in li]))
     li = [eval(i) for i in temp_list]
-    print('len:', len(li))
     for i in range(len(li)):
         for j in range(i+1, len(li)):
             try:
