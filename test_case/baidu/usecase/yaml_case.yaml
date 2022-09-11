@@ -7,6 +7,8 @@
     - command: click
       target: 提交按钮
       keyword_verify: 123123123123  # 关键字校验
+    - command: back
+
   百度搜索2:
     - command: type
       target: 关键字输入框
@@ -14,6 +16,8 @@
     - command: click
       target: 提交按钮
       keyword_verify: 90903909  # 关键字校验
+    - command: back
+
 登录_2:
   验证码登录:
     - command: click
@@ -55,11 +59,24 @@
     - command: type
       target: 关键字输入框
       value: 双11
-      depend: 首页  # 依赖”首页“模块
+      depend: 首页  # 这个依赖”首页“模块
     - command: click
       target: 提交按钮
       depend: 首页
     - command: click
       target: 百度首页href
+
+登录3:
+  验证码登录123:
+      - command: click
+        target: 登录按钮
+      - command: click
+        target: 短信登录
+      - command: click
+        target:  关闭登录弹框
+      - command: type
+        target: 关键字输入框
+        value: 双11
+        depend: 首页  # 这个依赖”首页“模块
 
 

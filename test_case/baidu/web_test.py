@@ -24,7 +24,7 @@ def main():
     # 使用匿名函数
     # wait.until(lambda diver: driver.find_element_by_id('kw'))
     driver.maximize_window()
-    yaml_file = 'usecase/baidu.yaml'
+    yaml_file = 'usecase/yaml_case.yaml'
     items = run_yaml(driver, yaml_file)  # 返回执行结果
     driver.quit()
     report_email(items)
@@ -54,22 +54,21 @@ def do_click(dr, target, value=None):
     # dr.find_element(*elm_loc).click()
     wait_element(dr, elm_loc).click()
 
+def do_back(dr, target, value=None):
+    print('执行了返回操作。')
+    dr.back()  # 返回
 
-"""可以增加跳转句柄的处理"""
+
 # 使用字典做动作映射
 command_map = {
     'open': do_open,  # 上面定义的do_open函数
     'type': do_type,  # 上面定义的do_type函数
     'click': do_click,  # 上面定义的do_click函数
-
+    'back': do_back # 返回
 }
 
 
 def run_yaml(dr, file):
-    # 加载yaml数据,并转为字典格式
-    # if not case_range:
-    #     print('用例执行范围有错。')
-    #     assert False
     with open(file, encoding='utf-8') as f:
         data = yaml.safe_load(f)
         res = execute_case(dr, data)  # 执行用例
@@ -167,7 +166,6 @@ def packing_parameters(element_dic=None, default_element_dic=None):
         element = elements.get(depend)
         del element_dic['depend']  # 局部删除，不会影响文档里的该字段
         element_dic = packing_parameters(element_dic, element)
-
     # 用例组装
     for k, v in element_dic.items():  # {'command': 'type', 'target': 'id=关键字输入框', 'value': '双12'}
         for k2, v2 in default_element_dic.items():  # {'关键字输入框': 'id=kw', '提交按钮': 'id=su'}
@@ -241,6 +239,7 @@ def report_email(items):
         print('用例执行全部通过。')
 
 
+
 def deleteDuplicate(li):
     """列表-字典去重"""
     temp_list = list(set([str(i) for i in li]))
@@ -250,11 +249,6 @@ def deleteDuplicate(li):
         for j in range(i+1, len(li)):
             try:
                 if li[i]['case_name'] == li[j]['case_name']:
-                    # print('='*30)
-                    # print(li[i])
-                    # print(li[j])
-                    # print('=' * 30)
-
                     if li[i]['result'] != '成功' and li[i] !='无':
                         li.remove(li[j])
                     elif li[j]['result'] != '成功' and li[j] !='无':
