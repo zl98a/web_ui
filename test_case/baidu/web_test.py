@@ -9,7 +9,7 @@ case_results_dict = {}  # 用例执行结果统计
 import json
 
 from base.config import init_page
-from base.config import read_yaml, packing_parameters2, report_email, read_yaml2
+from base.config import read_yaml, packing_parameters2, report_email, read_yaml2, query_case
 
 
 class Case(object):
@@ -72,12 +72,11 @@ class Case(object):
                 print(f'正在执行的用例为:【{item3}】')
                 case_results_dict['name'] = item3  # 用例名称
                 elements = read_yaml2(self.element_file)
-                try:
-                    element = [ele for ele in elements if ele == item][0]
-                except Exception as e:
-                    print(e)
-                    element = [ele for ele in elements if ele in item][0]
-                element = elements[element]  # {'关键字输入框': 'id=kw', '提交按钮': 'id=su'}
+                if many:
+                    col = many['case_module']
+                else:
+                    col = item
+                element = query_case(elements, col=col)
                 # 如果该用例对其他页面元素产生依赖，处理如下
                 case_ = item2.get(item3)  #
                 case_process_list = []  # 用例处理流程
@@ -134,7 +133,6 @@ class Case(object):
             depend = element_dic['depend']  # 用例之间有依赖
         except Exception as e:  # 没有依赖
             print(e)
-            pass
         else:  # 处理依赖
             elements = read_yaml2(self.element_file)
             element = elements.get(depend)
@@ -154,14 +152,11 @@ class Case(object):
         """总调度方法"""
         items = self.run_case(self.filename, many=many)  # 返回执行结果
         self.driver.quit()
-        if report:
-            report_email(items)
-        else:
-            print('当前为不发邮件配置，请在报告目录下查看运行报告文件。')
+        report_email(items, report)
+        print('当前为不发邮件配置，请在报告目录下查看运行报告文件。')
 
 
-# 测试一下
 if __name__ == "__main__":
     case = Case(case_file='usecase/yaml_case.yaml', element_file='elements/baidu_elements.yaml')
-    case.run(report=False, many={'case_module': '首页', 'case_name': '百度搜索2'})  # 单条执行
-    # case.run(many={})  # 多条执行
+    case.run(report=False, many={'case_module': '登录3', 'case_name': '验证码登录123'})  # 单条执行
+    # case.run(many={})  # 全部执行

@@ -55,7 +55,7 @@ def packing_parameters2(step):
         raise
     return command, target, value
 
-def report_email(items):
+def report_email(items, report=None):
     """生成报告和发送邮件"""
     case_number = len(items)  # 用例条数
     results = {}
@@ -104,12 +104,18 @@ def report_email(items):
         )
         f.write(out)
         f.close()
-    if failed_number>0:
+    if failed_number>0 and report:
         # 发送邮件
         mail(filepath=report_path, log=report_path)  # 发送邮件
-    else:
+    elif failed_number == 0:
         print('用例执行全部通过。')
 
-if __name__ == '__main__':
-    r = read_yaml(file='../test_case/baidu/elements/baidu_elements.yaml')
-    print(r)
+def query_case(elements, col):
+    try:
+        element = [ele for ele in elements if ele == col][0]
+    except Exception as e:
+        print(e)
+        element = [ele for ele in elements if ele in col][0]
+
+    element = elements[element]  # {'关键字输入框': 'id=kw', '提交按钮': 'id=su'}
+    return element

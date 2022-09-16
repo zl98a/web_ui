@@ -79,3 +79,4 @@
         target: 关键字输入框
         value: 双11
         depend: 首页  # 这个依赖”首页“模块
+      - command: back
