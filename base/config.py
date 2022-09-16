@@ -109,6 +109,8 @@ def report_email(items, report=None):
         mail(filepath=report_path, log=report_path)  # 发送邮件
     elif failed_number == 0:
         print('用例执行全部通过。')
+    elif not report:
+        print('当前为不发邮件配置，请在报告目录下查看运行报告文件。')
 
 def query_case(elements, col):
     try:

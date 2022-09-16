@@ -153,7 +153,6 @@ class Case(object):
         items = self.run_case(self.filename, many=many)  # 返回执行结果
         self.driver.quit()
         report_email(items, report)
-        print('当前为不发邮件配置，请在报告目录下查看运行报告文件。')
 
 
 if __name__ == "__main__":
