@@ -1,12 +1,12 @@
 <html lang="">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    <title>{{title}}</title>
+    <title>测试报告</title>
 </head>
-<h2 align="center">测试时间：{{test_time}}</h2>
-<h2 align="center">用例数：{{total_case}}</h2>
-<h2 align="center">成功数：{{successful_number}}&nbsp;&nbsp;&nbsp;&nbsp;成功率：{{successful_number_rate}}%</h2>
-<h2 align="center">失败数：{{failed_number}}&nbsp;&nbsp;&nbsp;&nbsp;失败率：{{failed_number_rate}}%</h2>
+<h2 align="center">测试时间：2022_09_17 10：47：56</h2>
+<h2 align="center">用例数：1</h2>
+<h2 align="center">成功数：1&nbsp;&nbsp;&nbsp;&nbsp;成功率：100.0%</h2>
+<h2 align="center">失败数：0&nbsp;&nbsp;&nbsp;&nbsp;失败率：0.0%</h2>
 
 
 
@@ -21,17 +21,17 @@
         <th style="background-color: aquamarine">总结果</th>
     </tr>
 
-    {% for item in items %}
+    
     <tr align='center'>
-        <td>{{ item.number }}</td>
-        <td>{{ item.case_name }}</td>
-        <td>{{item.run_step}}</td>
-        <td>{{ item.error_info }}</td>
-        <td>{{ item.verify_keyword }}</td>
-<!--        <td>{{ item.verify_res }}</td>-->
-        <td>{{ item.result }}</td>
+        <td>1</td>
+        <td>密码登录3</td>
+        <td>[{'command': 'click', 'target': '登录按钮'}, {'command': 'click', 'target': '账号登录'}, {'command': 'type', 'target': '账号名', 'value': 1591041683}, {'command': 'type', 'target': '密码', 'value': 123123123332}]</td>
+        <td>无</td>
+        <td>None</td>
+<!--        <td></td>-->
+        <td>成功</td>
     </tr>
-    {% endfor%}
+    
 
     </table>
     </body>

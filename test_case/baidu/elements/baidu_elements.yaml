@@ -6,6 +6,9 @@
   短信登录: id=TANGRAM__PSP_11__changeSmsCodeItem
   手机号: xpath=//input[@placeholder="请输入手机号"]
   验证码: xpath=//input[@placeholder="验证码"]
+  账号登录: id=TANGRAM__PSP_11__changePwdCodeItem
+  账号名: xpath=//input[@placeholder="手机号/用户名/邮箱"]
+  密码: xpath=//input[@placeholder="密码"]
   关闭登录弹框: xpath=//*[@class="close-btn"]
 百度首页:
   百度首页href: xpath=//a[text()="百度首页"]

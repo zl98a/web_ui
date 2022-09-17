@@ -47,13 +47,13 @@
     - command: click
       target: 登录按钮
     - command: click
-      target: 短信登录
+      target: 账号登录
     - command: type
-      target: 手机号
+      target: 账号名
       value: 1591041683
     - command: type
-      target: 验证码
-      value: 1234
+      target: 密码
+      value: 123123123332
 
 百度首页:
   打开百度首页:

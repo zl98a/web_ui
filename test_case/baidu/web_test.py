@@ -20,6 +20,7 @@ class Case(object):
         # 设置等待
         self.wait = WebDriverWait(self.driver, 5, 0.5)
         self.driver.maximize_window()
+        self.index = 1
 
     # 定义三个操作函数, 并保持参数签名统一
     def do_open(self, target, value=None):
@@ -64,7 +65,6 @@ class Case(object):
                 item2 = data.get(many['case_module'])
             else:
                 item2 = data.get(item)  # 首页-百度搜索
-
             for item3 in item2:  # 遍历模块多个用例
                 if many:
                     item3 = many['case_name']  # 获取单条用例
@@ -80,6 +80,7 @@ class Case(object):
                 # 如果该用例对其他页面元素产生依赖，处理如下
                 case_ = item2.get(item3)  #
                 case_process_list = []  # 用例处理流程
+                case_results_dict['执行步骤'] = str(case_)
                 for step in case_:  # 循环遍历用例执行步骤
                     step = self.deal_parameters_depend(element_dic=step, default_element_dic=element)
                     command, target, value = packing_parameters2(step)
@@ -157,5 +158,5 @@ class Case(object):
 
 if __name__ == "__main__":
     case = Case(case_file='usecase/yaml_case.yaml', element_file='elements/baidu_elements.yaml')
-    case.run(report=False, many={'case_module': '登录3', 'case_name': '验证码登录123'})  # 单条执行
-    # case.run(many={})  # 全部执行
+    case.run(report=False, many={'case_module': '登录_2', 'case_name': '密码登录3'})  # 单条执行
+    # case.run(many={}, report=False)  # 全部执行

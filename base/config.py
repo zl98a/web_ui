@@ -71,11 +71,18 @@ def report_email(items, report=None):
                 run_result = '失败'
             elif item2['校验结果'] == '失败' or item2['运行结果'] == '成功':
                 run_result = '失败'
-            r = {"case_name": item2['name'], 'result': run_result, 'verify_keyword':item2['校验关键字'], 'error_info': item2['报错信息']}
+            r = {"run_step": item2['执行步骤'], "case_name": item2['name'], 'result': run_result, 'verify_keyword':item2['校验关键字'], 'error_info': item2['报错信息']}
             items_result.append(r)
     items_result = deleteDuplicate(items_result)
+    print('total',  len(items_result), items_result)
     failed_number = len([item for item in items_result if item['result'] == '失败'])
     successful_number = len([item for item in items_result if item['result'] == '成功'])
+    case_list_ = []
+    case_numbers = list(range(1, len(items_result) + 1))
+    a_list = list(zip(case_numbers, items_result))
+    for a in a_list:
+        a[1].update({'number': a[0]})
+        case_list_.append(a[1])
 
     results.update({'标题': '测试报告',
                     '测试时间': datetime.datetime.now().strftime('%Y_%m_%d %H：%M：%S'),
@@ -84,7 +91,7 @@ def report_email(items, report=None):
                     '成功率': successful_number/case_number*100,
                     '失败数': failed_number,
                     '失败率': failed_number/case_number*100,
-                    'items': items_result})
+                    'items': case_list_})
 
     # 模板文件
     template = Environment(loader=FileSystemLoader(os.path.join(rootPath, 'base/web'))).get_template(
