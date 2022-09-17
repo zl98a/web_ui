@@ -4,8 +4,7 @@ import traceback
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium import webdriver
 
-case_results_list = []  # 用例列表
-case_results_dict = {}  # 用例执行结果统计
+
 import json
 
 from base.config import init_page
@@ -21,6 +20,8 @@ class Case(object):
         self.wait = WebDriverWait(self.driver, 5, 0.5)
         self.driver.maximize_window()
         self.index = 1
+        self.case_results_list = []  # 用例列表
+        self.case_results_dict = {}  # 用例执行结果统计
 
     # 定义三个操作函数, 并保持参数签名统一
     def do_open(self, target, value=None):
@@ -70,7 +71,7 @@ class Case(object):
                     item3 = many['case_name']  # 获取单条用例
                 self.do_open(target=init_page)  # 每次执行用例前，先初始化到首页
                 print(f'正在执行的用例为:【{item3}】')
-                case_results_dict['name'] = item3  # 用例名称
+                self.case_results_dict['name'] = item3  # 用例名称
                 elements = read_yaml2(self.element_file)
                 if many:
                     col = many['case_module']
@@ -80,39 +81,39 @@ class Case(object):
                 # 如果该用例对其他页面元素产生依赖，处理如下
                 case_ = item2.get(item3)  #
                 case_process_list = []  # 用例处理流程
-                case_results_dict['执行步骤'] = str(case_)
+                self.case_results_dict['执行步骤'] = str(case_)
                 for step in case_:  # 循环遍历用例执行步骤
                     step = self.deal_parameters_depend(element_dic=step, default_element_dic=element)
                     command, target, value = packing_parameters2(step)
                     func = self.command_map.get(command)
-                    case_results_dict['执行命令'] = command  # 用例执行命令
-                    case_results_dict['操作元素'] = target  # 操作元素
-                    case_results_dict['输入值'] = value  # 输入值
+                    self.case_results_dict['执行命令'] = command  # 用例执行命令
+                    self.case_results_dict['操作元素'] = target  # 操作元素
+                    self.case_results_dict['输入值'] = value  # 输入值
                     flag = True
                     try:
                         func(self, target, value)  # 执行函数
                     except Exception as e:
                         print(e)
                         error_info = traceback.format_exc()
-                        case_results_dict['报错信息'] = str(error_info)
-                        case_results_dict['运行结果'] = '失败'
+                        self.case_results_dict['报错信息'] = str(error_info)
+                        self.case_results_dict['运行结果'] = '失败'
                         flag = False
                     else:
-                        case_results_dict['运行结果'] = '成功'
-                        case_results_dict['报错信息'] = '无'
+                        self.case_results_dict['运行结果'] = '成功'
+                        self.case_results_dict['报错信息'] = '无'
                         verify_res, keyword = self.keyword_verify(step)  # 接收检验结果
-                        case_results_dict['校验关键字'] = keyword
-                        case_results_dict['校验结果'] = (lambda x: '成功' if x == 'True' else '失败')(verify_res)
+                        self.case_results_dict['校验关键字'] = keyword
+                        self.case_results_dict['校验结果'] = (lambda x: '成功' if x == 'True' else '失败')(verify_res)
 
-                    case_process_list.append(json.dumps(case_results_dict, ensure_ascii=False))
+                    case_process_list.append(json.dumps(self.case_results_dict, ensure_ascii=False))
                     time.sleep(0.5)  # 每个用例执行完毕后，等待3s
                     if not flag:  # 报错了， 退出这个流程
                         break
                         # continue
-                case_results_list.append(case_process_list)  # 添加运行结果到列表里
+                self.case_results_list.append(case_process_list)  # 添加运行结果到列表里
                 if many:  # 执行单条用例
-                    return case_results_list
-        return case_results_list
+                    return self.case_results_list
+        return self.case_results_list
 
     def keyword_verify(self, step):
         """关键字校验函数"""
@@ -158,5 +159,5 @@ class Case(object):
 
 if __name__ == "__main__":
     case = Case(case_file='usecase/yaml_case.yaml', element_file='elements/baidu_elements.yaml')
-    case.run(report=False, many={'case_module': '登录_2', 'case_name': '密码登录3'})  # 单条执行
-    # case.run(many={}, report=False)  # 全部执行
+    # case.run(report=False, many={'case_module': '首页', 'case_name': '百度搜索'})  # 单条执行
+    case.run(many={}, report=False)  # 全部执行

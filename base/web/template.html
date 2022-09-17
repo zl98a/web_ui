@@ -28,8 +28,12 @@
         <td>{{item.run_step}}</td>
         <td>{{ item.error_info }}</td>
         <td>{{ item.verify_keyword }}</td>
+        {% if item.result=='失败'%}
+            <td bgcolor="red">{{ item.result }}</td>
+        {% else %}
+            <td bgcolor="#adff2f">{{ item.result }}</td>
+        {% endif %}
 <!--        <td>{{ item.verify_res }}</td>-->
-        <td>{{ item.result }}</td>
     </tr>
     {% endfor%}
 
