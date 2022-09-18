@@ -4,10 +4,12 @@
     - command: type
       target: 关键字输入框  # 定位地址
       value: 双11
+      keyword_verify: 11
     - command: click
       target: 提交按钮  # 定位地址
-      keyword_verify: 123123123123  # 关键字校验
+      keyword_verify: 45454545545  # 关键字校验
     - command: back  # 页面返回
+      keyword_verify: 123
 
   百度搜索2:
     - command: type
@@ -51,6 +53,7 @@
     - command: type
       target: 账号名
       value: 1591041683
+      keyword_verify: 天天向上
     - command: type
       target: 密码
       value: 123123123332
@@ -58,11 +61,12 @@
 百度首页:
   打开百度首页:
     - command: type
-      target: 关键字输入框
+      target: 关键字输入框1
       value: 双11
+      keyword_verify: 首页
       depend: 首页  # 这个依赖”首页“模块
     - command: click
-      target: 提交按钮
+      target: 提交按钮1
       depend: 首页
     - command: click
       target: 百度首页href
@@ -70,7 +74,7 @@
 登录3:
   验证码登录123:
       - command: click
-        target: 登录按钮
+        target: 登录按钮1
       - command: click
         target: 短信登录
       - command: click
@@ -79,4 +83,5 @@
         target: 关键字输入框
         value: 双11
         depend: 首页  # 这个依赖”首页“模块
+        keyword_verify: 百度
       - command: back

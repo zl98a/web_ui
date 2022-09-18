@@ -90,6 +90,9 @@ class Case(object):
                     self.case_results_dict['操作元素'] = target  # 操作元素
                     self.case_results_dict['输入值'] = value  # 输入值
                     flag = True
+                    print('haha', step)
+                    verify_res, keyword = self.keyword_verify(step)  # 接收检验结果
+                    print('haha', verify_res, keyword)
                     try:
                         func(self, target, value)  # 执行函数
                     except Exception as e:
@@ -97,18 +100,19 @@ class Case(object):
                         error_info = traceback.format_exc()
                         self.case_results_dict['报错信息'] = str(error_info)
                         self.case_results_dict['运行结果'] = '失败'
+                        self.case_results_dict['校验结果'] = (lambda x: '成功' if x == 'True' else '失败')(verify_res)
+                        self.case_results_dict['校验关键字'] = keyword
                         flag = False
                     else:
                         self.case_results_dict['运行结果'] = '成功'
                         self.case_results_dict['报错信息'] = '无'
-                        verify_res, keyword = self.keyword_verify(step)  # 接收检验结果
                         self.case_results_dict['校验关键字'] = keyword
                         self.case_results_dict['校验结果'] = (lambda x: '成功' if x == 'True' else '失败')(verify_res)
 
                     case_process_list.append(json.dumps(self.case_results_dict, ensure_ascii=False))
                     time.sleep(0.5)  # 每个用例执行完毕后，等待3s
-                    if not flag:  # 报错了， 退出这个流程
-                        break
+                    # if not flag:  # 报错了， 退出这个流程
+                    #     break
                         # continue
                 self.case_results_list.append(case_process_list)  # 添加运行结果到列表里
                 if many:  # 执行单条用例

@@ -8,24 +8,73 @@ from jinja2 import Environment, FileSystemLoader
 from base.email_ import mail
 import datetime
 
-
 def deleteDuplicate(li):
     """列表-字典去重"""
     temp_list = list(set([str(i) for i in li]))
     li = [eval(i) for i in temp_list]
+    flag_list = []
     for i in range(len(li)):
         for j in range(i + 1, len(li)):
-            try:
-                if li[i]['case_name'] == li[j]['case_name']:
-                    if li[i]['result'] != '成功' and li[i] != '无':
-                        li.remove(li[j])
-                    elif li[j]['result'] != '成功' and li[j] != '无':
-                        li.remove(li[i])
-            except Exception as e:
-                print(e)
-                pass
-    return li
+            if li[i]['case_name'] == li[j]['case_name']:
+                flag_list.append(li[i])
+                flag_list.append(li[j])
 
+    tmp_case_list2 = []  # 添加用例名到新列表
+    for d in flag_list:
+        tmp_case_list2.append(d['case_name'])
+    no_repeat_case_list = []  # 存放去重后的列表
+    for case_name in list(set(tmp_case_list2)):
+        repeat_case = [x for index, x in enumerate(flag_list) if
+                       {k: v for k, v in x.items() if (k == "case_name" and v == case_name)}]
+
+        flag = [item for item in repeat_case if item['verify_keyword'] != 'None']
+        error_info_case = [item for item in repeat_case if item['error_info'] != '无']
+        if flag and error_info_case:
+            verify_keyword_list = list(set([(item['verify_keyword'], item['result']) for item in flag]))
+            flag[0]['verify_keyword'] = str(verify_keyword_list)
+            flag[0]['error_info'] = error_info_case[0]['error_info']
+            flag[0]['result'] = '失败'
+            no_repeat_case_list.append(flag[0])
+        elif not flag and error_info_case:
+            repeat_case[0]['verify_keyword'] = 'None'
+            repeat_case[0]['error_info'] = error_info_case[0]['error_info']
+            repeat_case[0]['result'] = '失败'
+            no_repeat_case_list.append(repeat_case[0])
+        elif flag and not error_info_case:
+            verify_keyword_list = list(set([(item['verify_keyword'], item['result']) for item in flag]))
+            flag[0]['verify_keyword'] = str(verify_keyword_list)
+            if '失败' in str(verify_keyword_list):
+                flag[0]['result'] = '失败'
+            else:
+                flag[0]['result'] = '成功'
+            no_repeat_case_list.append(flag[0])
+        else:  # 没有做校验
+            tmp_failed_case = None
+            if not error_info_case:
+                tmp_failed_case = repeat_case[0]
+                tmp_failed_case['result'] = '成功'
+            if error_info_case:
+                tmp_failed_case = repeat_case[0]
+                tmp_failed_case['result'] ='失败'
+            # for case_ in repeat_case:
+            #     if case_['error_info'] != '无':
+            #         tmp_failed_case = case_
+            #         break
+            #     elif case_['result'] =='失败':
+            #         tmp_failed_case = case_
+            #         break
+            #     elif case_['result'] =='成功':
+            #         tmp_failed_case = case_
+            #         break
+            no_repeat_case_list.append(tmp_failed_case)
+
+    for tmp_case_name in tmp_case_list2:
+        for d_tmp in li:
+            if d_tmp['case_name'] == tmp_case_name:
+                li.remove(d_tmp)
+
+    new_results_itme = li + no_repeat_case_list
+    return new_results_itme
 
 def read_yaml(file, encoding='utf-8'):
     """读取yaml"""
@@ -73,8 +122,8 @@ def report_email(items, report=None):
                 run_result = '失败'
             r = {"run_step": item2['执行步骤'], "case_name": item2['name'], 'result': run_result, 'verify_keyword':item2['校验关键字'], 'error_info': item2['报错信息']}
             items_result.append(r)
+    print(items_result)
     items_result = deleteDuplicate(items_result)
-    print('total',  len(items_result), items_result)
     failed_number = len([item for item in items_result if item['result'] == '失败'])
     successful_number = len([item for item in items_result if item['result'] == '成功'])
     case_list_ = []
@@ -128,3 +177,4 @@ def query_case(elements, col):
 
     element = elements[element]  # {'关键字输入框': 'id=kw', '提交按钮': 'id=su'}
     return element
+

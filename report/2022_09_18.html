@@ -1,0 +1,148 @@
+<html lang="">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>测试报告</title>
+</head>
+<h2 align="center">测试时间：2022_09_18 21：26：09</h2>
+<h2 align="center">用例数：7</h2>
+<h2 align="center">成功数：2&nbsp;&nbsp;&nbsp;&nbsp;成功率：28.57142857142857%</h2>
+<h2 align="center">失败数：5&nbsp;&nbsp;&nbsp;&nbsp;失败率：71.42857142857143%</h2>
+
+
+
+    <table border="1" width = "90%" cellspacing='0' cellpadding='0' align="center">
+    <tr>
+        <th style="background-color: aquamarine">编号</th>
+        <th style="background-color: aquamarine">用例名称</th>
+        <th style="background-color: aquamarine">执行步骤</th>
+        <th style="background-color: aquamarine">报错信息</th>
+        <th style="background-color: aquamarine">校验关键字</th>
+<!--        <th>校验结果</th>-->
+        <th style="background-color: aquamarine">总结果</th>
+    </tr>
+
+    
+    <tr align='center'>
+        <td>1</td>
+        <td>验证码登录</td>
+        <td>[{'command': 'click', 'target': '登录按钮'}, {'command': 'click', 'target': '短信登录'}, {'command': 'type', 'target': '手机号', 'value': 1591041683}, {'command': 'type', 'target': '验证码', 'value': 1234}]</td>
+        <td>无</td>
+        <td>None</td>
+        
+            <td bgcolor="#adff2f">成功</td>
+        
+<!--        <td></td>-->
+    </tr>
+    
+    <tr align='center'>
+        <td>2</td>
+        <td>密码登录</td>
+        <td>[{'command': 'click', 'target': '登录按钮'}, {'command': 'click', 'target': '短信登录'}, {'command': 'type', 'target': '手机号', 'value': 1591041683}, {'command': 'type', 'target': '验证码', 'value': 1234}]</td>
+        <td>无</td>
+        <td>None</td>
+        
+            <td bgcolor="#adff2f">成功</td>
+        
+<!--        <td></td>-->
+    </tr>
+    
+    <tr align='center'>
+        <td>3</td>
+        <td>密码登录3</td>
+        <td>[{'command': 'click', 'target': '登录按钮'}, {'command': 'click', 'target': '账号登录'}, {'command': 'type', 'target': '账号名', 'value': 1591041683, 'keyword_verify': '天天向上'}, {'command': 'type', 'target': '密码', 'value': 123123123332}]</td>
+        <td>无</td>
+        <td>[('天天向上', '失败')]</td>
+        
+            <td bgcolor="red">失败</td>
+        
+<!--        <td></td>-->
+    </tr>
+    
+    <tr align='center'>
+        <td>4</td>
+        <td>验证码登录123</td>
+        <td>[{'command': 'click', 'target': '登录按钮1'}, {'command': 'click', 'target': '短信登录'}, {'command': 'click', 'target': '关闭登录弹框'}, {'command': 'type', 'target': '关键字输入框', 'value': '双11', 'depend': '首页', 'keyword_verify': '百度'}, {'command': 'back'}]</td>
+        <td>Traceback (most recent call last):
+  File "C:\pythonPro\web_ui\test_case\baidu\web_test.py", line 97, in execute_case
+    func(self, target, value)  # 执行函数
+  File "C:\pythonPro\web_ui\test_case\baidu\web_test.py", line 43, in do_click
+    self.wait_element(elm_loc).click()
+  File "C:\pythonPro\web_ui\test_case\baidu\web_test.py", line 37, in wait_element
+    self.wait.until(lambda driver: driver.find_element(*elm_loc))
+  File "C:\Python\lib\site-packages\selenium\webdriver\support\wait.py", line 71, in until
+    value = method(self._driver)
+  File "C:\pythonPro\web_ui\test_case\baidu\web_test.py", line 37, in <lambda>
+    self.wait.until(lambda driver: driver.find_element(*elm_loc))
+  File "C:\Python\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 978, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+  File "C:\Python\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 322, in execute
+    self.error_handler.check_response(response)
+  File "C:\Python\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidArgumentException: Message: invalid argument: invalid locator
+  (Session info: MicrosoftEdge=105.0.1343.42)
+
+</td>
+        <td>[('百度', '成功')]</td>
+        
+            <td bgcolor="red">失败</td>
+        
+<!--        <td></td>-->
+    </tr>
+    
+    <tr align='center'>
+        <td>5</td>
+        <td>百度搜索2</td>
+        <td>[{'command': 'type', 'target': '关键字输入框', 'value': '双12'}, {'command': 'click', 'target': '提交按钮', 'keyword_verify': 90903909}, {'command': 'back'}]</td>
+        <td>无</td>
+        <td>[('90903909', '失败')]</td>
+        
+            <td bgcolor="red">失败</td>
+        
+<!--        <td></td>-->
+    </tr>
+    
+    <tr align='center'>
+        <td>6</td>
+        <td>百度搜索</td>
+        <td>[{'command': 'type', 'target': '关键字输入框', 'value': '双11', 'keyword_verify': 11}, {'command': 'click', 'target': '提交按钮', 'keyword_verify': 45454545545}, {'command': 'back', 'keyword_verify': 123}]</td>
+        <td>无</td>
+        <td>[('123', '成功'), ('11', '成功'), ('45454545545', '失败')]</td>
+        
+            <td bgcolor="red">失败</td>
+        
+<!--        <td></td>-->
+    </tr>
+    
+    <tr align='center'>
+        <td>7</td>
+        <td>打开百度首页</td>
+        <td>[{'command': 'type', 'target': '关键字输入框1', 'value': '双11', 'keyword_verify': '首页', 'depend': '首页'}, {'command': 'click', 'target': '提交按钮1', 'depend': '首页'}, {'command': 'click', 'target': '百度首页href'}]</td>
+        <td>Traceback (most recent call last):
+  File "C:\pythonPro\web_ui\test_case\baidu\web_test.py", line 97, in execute_case
+    func(self, target, value)  # 执行函数
+  File "C:\pythonPro\web_ui\test_case\baidu\web_test.py", line 43, in do_click
+    self.wait_element(elm_loc).click()
+  File "C:\Python\lib\site-packages\selenium\webdriver\remote\webelement.py", line 80, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "C:\Python\lib\site-packages\selenium\webdriver\remote\webelement.py", line 633, in _execute
+    return self._parent.execute(command, params)
+  File "C:\Python\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 322, in execute
+    self.error_handler.check_response(response)
+  File "C:\Python\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: MicrosoftEdge=105.0.1343.42)
+
+</td>
+        <td>[('首页', '失败')]</td>
+        
+            <td bgcolor="red">失败</td>
+        
+<!--        <td></td>-->
+    </tr>
+    
+
+    </table>
+    </body>
+</html>
