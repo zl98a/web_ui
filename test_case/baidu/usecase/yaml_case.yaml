@@ -61,12 +61,12 @@
 百度首页:
   打开百度首页:
     - command: type
-      target: 关键字输入框1
+      target: 关键字输入框
       value: 双11
       keyword_verify: 首页
       depend: 首页  # 这个依赖”首页“模块
     - command: click
-      target: 提交按钮1
+      target: 提交按钮
       depend: 首页
     - command: click
       target: 百度首页href
@@ -74,7 +74,7 @@
 登录3:
   验证码登录123:
       - command: click
-        target: 登录按钮1
+        target: 登录按钮
       - command: click
         target: 短信登录
       - command: click

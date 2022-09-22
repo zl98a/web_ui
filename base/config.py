@@ -122,7 +122,6 @@ def report_email(items, report=None):
                 run_result = '失败'
             r = {"run_step": item2['执行步骤'], "case_name": item2['name'], 'result': run_result, 'verify_keyword':item2['校验关键字'], 'error_info': item2['报错信息']}
             items_result.append(r)
-    print(items_result)
     items_result = deleteDuplicate(items_result)
     failed_number = len([item for item in items_result if item['result'] == '失败'])
     successful_number = len([item for item in items_result if item['result'] == '成功'])
