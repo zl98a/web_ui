@@ -24,11 +24,11 @@ class Case(object):
         # 可以在初始化阶段登录
 
     # 定义三个操作函数, 并保持参数签名统一
-    def do_open(self, target, value=None):
+    def do_open(self, target, value=None, wait_time=None):
         print('打开页面', target)
         self.driver.get(target)
 
-    def do_type(self, target, value=None):
+    def do_type(self, target=None, value=None,  wait_time=None):
         print(f'在 {target} 输入 {value}')
         elm_loc = target.split('=', 1)  # 分割得到定位方式和定位器
         self.wait_element(elm_loc).send_keys(value)
@@ -37,27 +37,27 @@ class Case(object):
         self.wait.until(lambda driver: driver.find_element(*elm_loc))
         return self.driver.find_element(*elm_loc)  # 返回元素
 
-    def do_click(self, target, value=None):
+    def do_click(self, target, value=None, wait_time=None):
         print(f'点击 {target}')
         elm_loc = target.split('=', 1)
         self.wait_element(elm_loc).click()
 
-    def do_back(self, target, value=None):
+    def do_back(self, target, value=None, wait_time=None):
         print('执行了返回操作。')
         self.driver.back()  # 返回
 
-    def do_swipe(self, target, value=None):
+    def do_swipe(self, target, value=None, wait_time=None):
         print('滑动屏幕查找某个元素')
         find_ele = pub_swipe_down(driver=self.driver, ele=target)
         self.driver.execute_script("$(arguments[0]).click()", find_ele)
 
-    def print_page_source(self, target, value=None):
+    def print_page_source(self, target, value=None, wait_time=None):
         print('打印页面源码')
         print(self.driver.page_source)
 
-    def wait_time(self, target, value=None):
+    def wait_time(self, target=None, value=None, wait_time=None):
         print('强制等待.....')
-        time.sleep(5)
+        time.sleep(wait_time)
 
     # 使用字典做动作映射
     command_map = {
@@ -100,14 +100,14 @@ class Case(object):
                 self.case_results_dict['执行步骤'] = str(case_)
                 for step in case_:  # 循环遍历用例执行步骤
                     step = self.deal_parameters_depend(element_dic=step, default_element_dic=element)
-                    command, target, value = packing_parameters2(step)
+                    command, target, value, wait_time = packing_parameters2(step)
                     func = self.command_map.get(command)
                     self.case_results_dict['执行命令'] = command  # 用例执行命令
                     self.case_results_dict['操作元素'] = target  # 操作元素
                     self.case_results_dict['输入值'] = value  # 输入值
                     verify_res, keyword = self.keyword_verify(step)  # 接收检验结果
                     try:
-                        func(self, target, value)  # 执行函数
+                        func(self, target=target, value=value, wait_time=wait_time)  # 执行函数
                     except Exception as e:
                         print(e)
                         error_info = traceback.format_exc()
@@ -174,3 +174,4 @@ if __name__ == "__main__":
     case = Case(case_file='usecase/yaml_case.yaml', element_file='elements/baidu_elements.yaml')
     case.run(report=False, many={'case_module': '简书', 'case_name': '简书搜索'})  # 单条执行
     # case.run(many={}, report=False)  # 全部执行
+

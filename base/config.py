@@ -94,19 +94,27 @@ def read_yaml2(file, encoding='gbk'):
 
 def packing_parameters2(step):
     """分装参数"""
+    command = None
+    target = None
+    value = None
+    wait_time = None
     try:
         command = step.get('command')
     except:
-        raise
+        pass
     try:
         target = step.get('target')
     except:
-        raise
+        pass
     try:
         value = step.get('value')
     except:
-        raise
-    return command, target, value
+        pass
+    try:
+        wait_time = step.get('wait_time')
+    except:
+        pass
+    return command, target, value, wait_time
 
 def report_email(items, report=None):
     """生成报告和发送邮件"""
