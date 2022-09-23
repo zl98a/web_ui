@@ -190,27 +190,6 @@ def query_case(elements, col):
     return element
 
 
-def pub_swipe_down(driver=None, ele=None, error=False):
-    if not ele:
-        print('swipe ele is not null!')
-        assert False
-    swipe_x = 0
-    for b in range(100):
-        try:
-            find_ele = driver.find_element_by_xpath('//a[text()="阅读更多"]')
-        except Exception as e:
-            print(e)
-            driver.execute_script(f'window.scrollTo({swipe_x},{swipe_x + 300})')  # 下滑
-            swipe_x += 300
-            time.sleep(1)
-            if b == 20:  # 查找16次
-                if error:
-                    assert False
-                else:
-                    print('没有找到该元素~')
-                    return
-        else:
-            print('找到元素了。')
-            return find_ele
+
 
 

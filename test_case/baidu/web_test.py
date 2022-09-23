@@ -6,7 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium import webdriver
 import json
 sys.path.append('C:\pythonPro\web_ui')
-from base.config import init_page, rootPath, pub_swipe_down
+from base.config import init_page, rootPath
 from base.config import read_yaml, packing_parameters2, report_email, read_yaml2, query_case
 
 
@@ -16,7 +16,7 @@ class Case(object):
         self.element_file = element_file  # 元素文件
         self.driver = webdriver.Edge(executable_path=os.path.join(rootPath, 'base/web/msedgedriver.exe'))
         # 设置等待
-        self.wait = WebDriverWait(self.driver, 10, 0.5)
+        self.wait = WebDriverWait(self.driver, 5, 0.5)
         self.driver.maximize_window()
         self.index = 1
         self.case_results_list = []  # 用例列表
@@ -48,8 +48,14 @@ class Case(object):
 
     def do_swipe(self, target, value=None, wait_time=None):
         print('滑动屏幕查找某个元素')
-        find_ele = pub_swipe_down(driver=self.driver, ele=target)
-        self.driver.execute_script("$(arguments[0]).click()", find_ele)
+        find_ele = self.pub_swipe_down(elm_loc=target)
+        if not find_ele:
+            print('没找到元素。')
+            assert False
+        try:
+            self.driver.execute_script("$(arguments[0]).click()", find_ele)
+        except Exception as e:
+            print(e)
 
     def print_page_source(self, target, value=None, wait_time=None):
         print('打印页面源码')
@@ -59,6 +65,29 @@ class Case(object):
         print('强制等待.....')
         time.sleep(wait_time)
 
+    def pub_swipe_down(self, elm_loc=None, error=False):
+        if not elm_loc:
+            print('swipe ele is not null!')
+            assert False
+        swipe_x = 0
+        for b in range(100):
+            try:
+                ele = elm_loc.split('=', 1)
+                find_ele = self.driver.find_element(*ele)
+            except Exception as e:
+                print(e)
+                self.driver.execute_script(f'window.scrollTo({swipe_x},{swipe_x + 300})')  # 下滑
+                swipe_x += 300
+                time.sleep(1)
+                if b == 20:  # 查找16次
+                    if error:
+                        assert False
+                    else:
+                        print('没有找到该元素~')
+                        return
+            else:
+                print('找到元素了。')
+                return find_ele
     # 使用字典做动作映射
     command_map = {
         'open': do_open,  # 上面定义的do_open函数
