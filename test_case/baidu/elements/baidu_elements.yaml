@@ -12,3 +12,6 @@
   关闭登录弹框: xpath=//*[@class="close-btn"]
 百度首页:
   百度首页href: xpath=//a[text()="百度首页"]
+简书:
+  简书首页输入框: xpath=//li/form/input[2]
+  底部阅读更多: xpath=//a[text()="阅读更多"]

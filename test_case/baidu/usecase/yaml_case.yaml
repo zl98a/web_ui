@@ -85,3 +85,24 @@
         depend: 首页  # 这个依赖”首页“模块
         keyword_verify: 百度
       - command: back
+简书:
+    简书搜索:
+      - command: type
+        target: 关键字输入框
+        value: 简书官网
+        depend: 首页
+      - command: click
+        target: 提交按钮
+        depend: 首页
+      - command: open
+        target: https://www.jianshu.com/
+      - command: click
+        target: 简书首页输入框
+      - command: type
+        target: 简书首页输入框
+        value: Python
+      - command: swipe
+        target: 底部阅读更多
+      - command: click
+        target: 底部阅读更多
+      - command: wait

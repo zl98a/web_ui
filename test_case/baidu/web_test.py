@@ -1,9 +1,12 @@
+import os
+import sys
 import time
 import traceback
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium import webdriver
 import json
-from base.config import init_page
+sys.path.append('C:\pythonPro\web_ui')
+from base.config import init_page, rootPath, pub_swipe_down
 from base.config import read_yaml, packing_parameters2, report_email, read_yaml2, query_case
 
 
@@ -11,9 +14,9 @@ class Case(object):
     def __init__(self, case_file=None, element_file=None):
         self.filename = case_file  # 用例文件
         self.element_file = element_file  # 元素文件
-        self.driver = webdriver.Edge(executable_path='../../base/web/msedgedriver.exe')
+        self.driver = webdriver.Edge(executable_path=os.path.join(rootPath, 'base/web/msedgedriver.exe'))
         # 设置等待
-        self.wait = WebDriverWait(self.driver, 5, 0.5)
+        self.wait = WebDriverWait(self.driver, 10, 0.5)
         self.driver.maximize_window()
         self.index = 1
         self.case_results_list = []  # 用例列表
@@ -43,12 +46,28 @@ class Case(object):
         print('执行了返回操作。')
         self.driver.back()  # 返回
 
+    def do_swipe(self, target, value=None):
+        print('滑动屏幕查找某个元素')
+        find_ele = pub_swipe_down(driver=self.driver, ele=target)
+        self.driver.execute_script("$(arguments[0]).click()", find_ele)
+
+    def print_page_source(self, target, value=None):
+        print('打印页面源码')
+        print(self.driver.page_source)
+
+    def wait_time(self, target, value=None):
+        print('强制等待.....')
+        time.sleep(5)
+
     # 使用字典做动作映射
     command_map = {
         'open': do_open,  # 上面定义的do_open函数
         'type': do_type,  # 上面定义的do_type函数
         'click': do_click,  # 上面定义的do_click函数
-        'back': do_back  # 返回
+        'back': do_back,  # 返回
+        'swipe': do_swipe,  # 滑动屏幕
+        'print': print_page_source,
+        'wait': wait_time
     }
 
     def run_case(self, file, many=None):
@@ -153,5 +172,5 @@ class Case(object):
 
 if __name__ == "__main__":
     case = Case(case_file='usecase/yaml_case.yaml', element_file='elements/baidu_elements.yaml')
-    # case.run(report=False, many={'case_module': '百度首页', 'case_name': '打开百度首页'})  # 单条执行
-    case.run(many={}, report=False)  # 全部执行
+    case.run(report=False, many={'case_module': '简书', 'case_name': '简书搜索'})  # 单条执行
+    # case.run(many={}, report=False)  # 全部执行
