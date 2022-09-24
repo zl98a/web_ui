@@ -8,13 +8,16 @@ import json
 sys.path.append('C:\pythonPro\web_ui')
 from base.config import init_page, rootPath
 from base.config import read_yaml, packing_parameters2, report_email, read_yaml2, query_case
+from selenium.webdriver.edge.options import Options
 
 
 class Case(object):
     def __init__(self, case_file=None, element_file=None):
         self.filename = case_file  # 用例文件
         self.element_file = element_file  # 元素文件
-        self.driver = webdriver.Edge(executable_path=os.path.join(rootPath, 'base/web/msedgedriver.exe'))
+        option = Options()
+        option.page_load_strategy = 'none'  # 加载策略
+        self.driver = webdriver.Edge(executable_path=os.path.join(rootPath, 'base/web/msedgedriver.exe'), capabilities=option.to_capabilities())
         # 设置等待
         self.wait = WebDriverWait(self.driver, 5, 0.5)
         self.driver.maximize_window()
@@ -201,6 +204,6 @@ class Case(object):
 
 if __name__ == "__main__":
     case = Case(case_file='usecase/yaml_case.yaml', element_file='elements/baidu_elements.yaml')
-    case.run(report=False, many={'case_module': '简书', 'case_name': '简书搜索'})  # 单条执行
-    # case.run(many={}, report=False)  # 全部执行
+    # case.run(report=False, many={'case_module': '简书', 'case_name': '简书搜索'})  # 单条执行
+    case.run(many={}, report=False)  # 全部执行
 
