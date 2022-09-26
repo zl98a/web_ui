@@ -111,3 +111,18 @@
         wait_time: 3  # 强制等待
       - command: click
         target: 简书出版
+      - command: wait
+        wait_time: 3
+散文网:  # 模块名
+    进入详情校验:  # 用例1
+      - command: open
+        target: https://www.meiwen.net.cn/wenzhang/jieri/
+      - command: click
+        target: 首条数据详情页
+      - command: jump_window_1  # 跳转至新句柄
+      - command: wait
+        wait_time: 3  # 等待3s
+      - command: close_current_window  # 关闭当前串口
+      - command: jump_window_0  # 还原句柄
+    # 执行用例2时，页面会初始化至起始页面，之后再起始企业基础上，跟据用例执行操作
+        keyword_verify: ['美文阅读', '散文']

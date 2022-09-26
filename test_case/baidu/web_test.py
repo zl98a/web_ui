@@ -27,7 +27,6 @@ class Case(object):
         self.case_results_list = []  # 用例列表
         self.case_results_dict = {}  # 用例执行结果统计
         # 可以在初始化阶段登录
-        self.time = 1.5
 
     # 定义三个操作函数, 并保持参数签名统一
     def do_open(self, target, value=None, wait_time=None):
@@ -68,9 +67,20 @@ class Case(object):
 
     def wait_time(self, target=None, value=None, wait_time=None):
         print('强制等待.....')
-        time.sleep(self.time)
+        time.sleep(wait_time)
+
+    def jump_window_1(self, target, value=None, wait_time=None):
+        windows_handles = self.driver.window_handles
+        self.driver.switch_to.window(windows_handles[-1])  # 跳转句柄
+
+    def jump_window_0(self, target, value=None, wait_time=None):
+        self.driver.switch_to.window(self.driver.window_handles[0])  # 还原句柄
+
+    def close_current_window(self, target, value=None, wait_time=None):
+        self.driver.close()  # 关闭当前浏览器窗口
 
     def pub_swipe_down(self, elm_loc=None, error=False):
+        """下滑直至查找到某个元素"""
         if not elm_loc:
             print('swipe ele is not null!')
             assert False
@@ -84,7 +94,7 @@ class Case(object):
                 self.driver.execute_script(f'window.scrollTo({swipe_x},{swipe_x + 300})')  # 下滑
                 swipe_x += 300
                 time.sleep(1)
-                if b == 20:  # 查找16次
+                if b == 20:  # 查找20次
                     if error:
                         assert False
                     else:
@@ -102,7 +112,10 @@ class Case(object):
         'back': do_back,  # 返回
         'swipe': do_swipe,  # 滑动屏幕
         'print': print_page_source,
-        'wait': wait_time
+        'wait': wait_time,
+        'jump_window_1': jump_window_1,
+        'jump_window_0': jump_window_0,
+        'close_current_window': close_current_window
     }
 
     def run_case(self, file, many=None):
@@ -140,17 +153,19 @@ class Case(object):
                     self.case_results_dict['执行命令'] = command  # 用例执行命令
                     self.case_results_dict['操作元素'] = target  # 操作元素
                     self.case_results_dict['输入值'] = value  # 输入值
-                    verify_res, keyword = self.keyword_verify(step)  # 接收检验结果
+                    verify_res, keyword = None, None
                     try:
                         func(self, target=target, value=value, wait_time=wait_time)  # 执行函数
                     except Exception as e:
                         print(e)
+                        verify_res, keyword = self.keyword_verify(step)  # 接收检验结果
                         error_info = traceback.format_exc()
                         self.case_results_dict['报错信息'] = str(error_info)
                         self.case_results_dict['运行结果'] = '失败'
                         self.case_results_dict['校验结果'] = (lambda x: '成功' if x == 'True' else '失败')(verify_res)
                         self.case_results_dict['校验关键字'] = keyword
                     else:
+                        verify_res, keyword = self.keyword_verify(step)  # 接收检验结果
                         self.case_results_dict['运行结果'] = '成功'
                         self.case_results_dict['报错信息'] = '无'
                         self.case_results_dict['校验关键字'] = keyword
@@ -165,20 +180,33 @@ class Case(object):
 
     def keyword_verify(self, step):
         """关键字校验函数"""
+        verify_res = []
         try:
             item = step['keyword_verify']
         except Exception as e:
             print(e)
             return 'True', 'None'
-        else:
-            for i in range(5):
-                if str(item) not in self.driver.page_source:
-                    print(f'{str(item)}校验失败')
-                    time.sleep(1)  # 等待1s继续查找
-                    if i == 4:
-                        return 'False', str(item)
+        else:  #
+            if isinstance(item, list):  # 参数为列表
+                for ele in item:
+                    if ele in self.driver.page_source:
+                        verify_res.append({ele: 'True'})
+                    else:
+                        verify_res.append({ele: 'False'})
+            if isinstance(item, str) or isinstance(item, int):  # 参数为字符串 或 整型
+                if str(item) in self.driver.page_source:
+                    verify_res.append({item: 'True'})
                 else:
-                    return 'True', str(item)  # 返回&&跳出循环
+                    verify_res.append({item: 'False'})
+        results = []  # 最终结果
+        for item in verify_res:
+            for k, v in item.items():
+                results.append(f'{k}={v}')
+
+        if 'False' in str(verify_res):
+            return 'False', ''.join(results)
+        else:
+            return 'True', ''.join(results)
 
     def deal_parameters_depend(self, element_dic=None, default_element_dic=None):
         """封装参数"""
@@ -210,5 +238,5 @@ class Case(object):
 
 if __name__ == "__main__":
     case = Case(case_file='usecase/yaml_case.yaml', element_file='elements/baidu_elements.yaml')
-    case.run(report=False, many={'case_module': '简书', 'case_name': '简书搜索'})  # 单条执行
-    # case.run(many={}, report=False)  # 全部执行
+    # case.run(report=False, many={'case_module': '散文网', 'case_name': '进入详情校验'})  # 单条执行
+    case.run(many={}, report=False)  # 全部执行
