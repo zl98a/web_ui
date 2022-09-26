@@ -3,10 +3,10 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <title>测试报告</title>
 </head>
-<h2 align="center">测试时间：2022_09_26 11：31：06</h2>
-<h2 align="center">用例数：8</h2>
-<h2 align="center">成功数：5&nbsp;&nbsp;&nbsp;&nbsp;成功率：62.5%</h2>
-<h2 align="center">失败数：3&nbsp;&nbsp;&nbsp;&nbsp;失败率：37.5%</h2>
+<h2 align="center">测试时间：2022_09_26 11：38：47</h2>
+<h2 align="center">用例数：1</h2>
+<h2 align="center">成功数：1&nbsp;&nbsp;&nbsp;&nbsp;成功率：100.0%</h2>
+<h2 align="center">失败数：0&nbsp;&nbsp;&nbsp;&nbsp;失败率：0.0%</h2>
 
 
 
@@ -24,96 +24,12 @@
     
     <tr align='center'>
         <td>1</td>
-        <td>验证码登录</td>
-        <td>[{'command': 'click', 'target': '登录按钮'}, {'command': 'click', 'target': '短信登录'}, {'command': 'type', 'target': '手机号', 'value': 1591041683}, {'command': 'type', 'target': '验证码', 'value': 1234}]</td>
-        <td>无</td>
-        <td>None</td>
-        
-            <td bgcolor="#adff2f">成功</td>
-        
-<!--        <td></td>-->
-    </tr>
-    
-    <tr align='center'>
-        <td>2</td>
         <td>简书搜索</td>
-        <td>[{'command': 'type', 'target': '关键字输入框', 'value': '简书官网', 'depend': '首页'}, {'command': 'click', 'target': '提交按钮', 'depend': '首页'}, {'command': 'open', 'target': 'https://www.jianshu.com/'}, {'command': 'click', 'target': '简书首页输入框'}, {'command': 'type', 'target': '简书首页输入框', 'value': 'Python'}, {'command': 'swipe', 'target': '底部阅读更多'}, {'command': 'wait', 'wait_time': 3}, {'command': 'click', 'target': '底部阅读更多'}, {'command': 'wait', 'wait_time': 3}]</td>
+        <td>[{'command': 'type', 'target': '关键字输入框', 'value': '简书官网', 'depend': '首页'}, {'command': 'click', 'target': '提交按钮', 'depend': '首页'}, {'command': 'open', 'target': 'https://www.jianshu.com/'}, {'command': 'click', 'target': '简书首页输入框'}, {'command': 'type', 'target': '简书首页输入框', 'value': 'Python'}, {'command': 'swipe', 'target': '底部阅读更多'}, {'command': 'wait', 'wait_time': 3}, {'command': 'click', 'target': '底部阅读更多'}, {'command': 'wait', 'wait_time': 3}, {'command': 'click', 'target': '简书出版'}]</td>
         <td>无</td>
         <td>None</td>
         
             <td bgcolor="#adff2f">成功</td>
-        
-<!--        <td></td>-->
-    </tr>
-    
-    <tr align='center'>
-        <td>3</td>
-        <td>密码登录</td>
-        <td>[{'command': 'click', 'target': '登录按钮'}, {'command': 'click', 'target': '短信登录'}, {'command': 'type', 'target': '手机号', 'value': 1591041683}, {'command': 'type', 'target': '验证码', 'value': 1234}]</td>
-        <td>无</td>
-        <td>None</td>
-        
-            <td bgcolor="#adff2f">成功</td>
-        
-<!--        <td></td>-->
-    </tr>
-    
-    <tr align='center'>
-        <td>4</td>
-        <td>密码登录3</td>
-        <td>[{'command': 'click', 'target': '登录按钮'}, {'command': 'click', 'target': '账号登录'}, {'command': 'type', 'target': '账号名', 'value': 1591041683, 'keyword_verify': '天天向上'}, {'command': 'type', 'target': '密码', 'value': 123123123332}]</td>
-        <td>无</td>
-        <td>[('天天向上', '失败')]</td>
-        
-            <td bgcolor="red">失败</td>
-        
-<!--        <td></td>-->
-    </tr>
-    
-    <tr align='center'>
-        <td>5</td>
-        <td>验证码登录123</td>
-        <td>[{'command': 'click', 'target': '登录按钮'}, {'command': 'click', 'target': '短信登录'}, {'command': 'click', 'target': '关闭登录弹框'}, {'command': 'type', 'target': '关键字输入框', 'value': '双11', 'depend': '首页', 'keyword_verify': '百度'}, {'command': 'back'}]</td>
-        <td>无</td>
-        <td>[('百度', '成功')]</td>
-        
-            <td bgcolor="#adff2f">成功</td>
-        
-<!--        <td></td>-->
-    </tr>
-    
-    <tr align='center'>
-        <td>6</td>
-        <td>百度搜索</td>
-        <td>[{'command': 'type', 'target': '关键字输入框', 'value': '双11', 'keyword_verify': 11}, {'command': 'click', 'target': '提交按钮', 'keyword_verify': 45454545545}, {'command': 'back', 'keyword_verify': 123}]</td>
-        <td>无</td>
-        <td>[('123', '成功'), ('45454545545', '失败'), ('11', '成功')]</td>
-        
-            <td bgcolor="red">失败</td>
-        
-<!--        <td></td>-->
-    </tr>
-    
-    <tr align='center'>
-        <td>7</td>
-        <td>打开百度首页</td>
-        <td>[{'command': 'type', 'target': '关键字输入框', 'value': '双11', 'keyword_verify': '首页', 'depend': '首页'}, {'command': 'click', 'target': '提交按钮', 'depend': '首页'}, {'command': 'click', 'target': '百度首页href'}]</td>
-        <td>无</td>
-        <td>[('首页', '成功')]</td>
-        
-            <td bgcolor="#adff2f">成功</td>
-        
-<!--        <td></td>-->
-    </tr>
-    
-    <tr align='center'>
-        <td>8</td>
-        <td>百度搜索2</td>
-        <td>[{'command': 'type', 'target': '关键字输入框', 'value': '双12'}, {'command': 'click', 'target': '提交按钮', 'keyword_verify': 90903909}, {'command': 'back'}]</td>
-        <td>无</td>
-        <td>[('90903909', '失败')]</td>
-        
-            <td bgcolor="red">失败</td>
         
 <!--        <td></td>-->
     </tr>

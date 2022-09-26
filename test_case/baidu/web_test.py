@@ -210,5 +210,5 @@ class Case(object):
 
 if __name__ == "__main__":
     case = Case(case_file='usecase/yaml_case.yaml', element_file='elements/baidu_elements.yaml')
-    # case.run(report=False, many={'case_module': '简书', 'case_name': '简书搜索'})  # 单条执行
-    case.run(many={}, report=False)  # 全部执行
+    case.run(report=False, many={'case_module': '简书', 'case_name': '简书搜索'})  # 单条执行
+    # case.run(many={}, report=False)  # 全部执行

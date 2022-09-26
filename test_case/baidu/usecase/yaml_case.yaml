@@ -109,3 +109,5 @@
         target: 底部阅读更多
       - command: wait
         wait_time: 3  # 强制等待
+      - command: click
+        target: 简书出版
