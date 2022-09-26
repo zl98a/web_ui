@@ -13,7 +13,7 @@
     <table border="1" width = "90%" cellspacing='0' cellpadding='0' align="center">
     <tr>
         <th style="background-color: aquamarine">编号</th>
-        <th style="background-color: aquamarine">用例名称</th>
+        <th style="background-color: aquamarine; font-weight: bold; color: blue;">用例名称</th>
         <th style="background-color: aquamarine">执行步骤</th>
         <th style="background-color: aquamarine">报错信息</th>
         <th style="background-color: aquamarine">校验关键字</th>
@@ -24,7 +24,7 @@
     {% for item in items %}
     <tr align='center'>
         <td>{{ item.number }}</td>
-        <td>{{ item.case_name }}</td>
+        <td style="font-weight: bold; color: blue;">{{ item.case_name }}</td>
         <td>{{item.run_step}}</td>
         <td>{{ item.error_info }}</td>
         <td>{{ item.verify_keyword }}</td>

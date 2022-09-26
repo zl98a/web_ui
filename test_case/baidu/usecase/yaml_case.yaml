@@ -113,6 +113,10 @@
         target: 简书出版
       - command: wait
         wait_time: 3
+      - command: jump_window_1  # 跳转至新句柄
+      - command: close_current_window  # 关闭当前串口
+      - command: jump_window_0  # 还原句柄
+
 散文网:  # 模块名
     进入详情校验:  # 用例1
       - command: open
