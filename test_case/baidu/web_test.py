@@ -5,7 +5,8 @@ import traceback
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium import webdriver
 import json
-sys.path.append('C:\pythonPro\web_ui')
+
+sys.path.append(r'C:\pythonPro\web_ui')
 from base.config import init_page, rootPath
 from base.config import read_yaml, packing_parameters2, report_email, read_yaml2, query_case
 from selenium.webdriver.edge.options import Options
@@ -17,7 +18,8 @@ class Case(object):
         self.element_file = element_file  # 元素文件
         option = Options()
         option.page_load_strategy = 'none'  # 加载策略
-        self.driver = webdriver.Edge(executable_path=os.path.join(rootPath, 'base/web/msedgedriver.exe'), capabilities=option.to_capabilities())
+        self.driver = webdriver.Edge(executable_path=os.path.join(rootPath, 'base/web/msedgedriver.exe'),
+                                     capabilities=option.to_capabilities())
         # 设置等待
         self.wait = WebDriverWait(self.driver, 5, 0.5)
         self.driver.maximize_window()
@@ -25,20 +27,20 @@ class Case(object):
         self.case_results_list = []  # 用例列表
         self.case_results_dict = {}  # 用例执行结果统计
         # 可以在初始化阶段登录
+        self.time = 1.5
 
     # 定义三个操作函数, 并保持参数签名统一
     def do_open(self, target, value=None, wait_time=None):
         print('打开页面', target)
         self.driver.get(target)
 
-    def do_type(self, target=None, value=None,  wait_time=None):
+    def do_type(self, target=None, value=None, wait_time=None):
         print(f'在 {target} 输入 {value}')
         elm_loc = target.split('=', 1)  # 分割得到定位方式和定位器
         self.wait_element(elm_loc).send_keys(value)
 
     def wait_element(self, elm_loc):
-        self.wait.until(lambda driver: driver.find_element(*elm_loc))
-        return self.driver.find_element(*elm_loc)  # 返回元素
+        return self.wait.until(lambda driver: driver.find_element(*elm_loc))
 
     def do_click(self, target, value=None, wait_time=None):
         print(f'点击 {target}')
@@ -66,7 +68,7 @@ class Case(object):
 
     def wait_time(self, target=None, value=None, wait_time=None):
         print('强制等待.....')
-        time.sleep(wait_time)
+        time.sleep(self.time)
 
     def pub_swipe_down(self, elm_loc=None, error=False):
         if not elm_loc:
@@ -91,6 +93,7 @@ class Case(object):
             else:
                 print('找到元素了。')
                 return find_ele
+
     # 使用字典做动作映射
     command_map = {
         'open': do_open,  # 上面定义的do_open函数
@@ -168,11 +171,14 @@ class Case(object):
             print(e)
             return 'True', 'None'
         else:
-            if str(item) not in self.driver.page_source:
-                print('校验失败')
-                return 'False', str(item)
-            else:
-                return 'True', str(item)
+            for i in range(5):
+                if str(item) not in self.driver.page_source:
+                    print(f'{str(item)}校验失败')
+                    time.sleep(1)  # 等待1s继续查找
+                    if i == 4:
+                        return 'False', str(item)
+                else:
+                    return 'True', str(item)  # 返回&&跳出循环
 
     def deal_parameters_depend(self, element_dic=None, default_element_dic=None):
         """封装参数"""
@@ -206,4 +212,3 @@ if __name__ == "__main__":
     case = Case(case_file='usecase/yaml_case.yaml', element_file='elements/baidu_elements.yaml')
     # case.run(report=False, many={'case_module': '简书', 'case_name': '简书搜索'})  # 单条执行
     case.run(many={}, report=False)  # 全部执行
-
