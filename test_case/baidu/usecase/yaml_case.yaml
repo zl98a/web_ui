@@ -128,5 +128,5 @@
         wait_time: 3  # 等待3s
       - command: close_current_window  # 关闭当前串口
       - command: jump_window_0  # 还原句柄
-    # 执行用例2时，页面会初始化至起始页面，之后再起始企业基础上，跟据用例执行操作
         keyword_verify: ['美文阅读', '散文']
+  # 执行用例2时，页面会初始化至起始页面，之后再起始企业基础上，跟据用例执行操作

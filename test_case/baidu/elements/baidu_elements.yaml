@@ -2,7 +2,7 @@
   关键字输入框: id=kw
   提交按钮: id=su
 登录:
-  登录按钮: xpath=//a[contains(@class,"login-btn") and contains(text(),"登录")]
+  登录按钮: xpath=//a[contains(@class,"login-btn") and contains(text(),"登录1")]
   短信登录: id=TANGRAM__PSP_11__changeSmsCodeItem
   手机号: xpath=//input[@placeholder="请输入手机号"]
   验证码: xpath=//input[@placeholder="验证码"]

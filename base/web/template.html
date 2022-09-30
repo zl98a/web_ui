@@ -26,7 +26,11 @@
         <td>{{ item.number }}</td>
         <td style="font-weight: bold; color: blue;">{{ item.case_name }}</td>
         <td>{{item.run_step}}</td>
+        {% if item.error_info=='无'%}
         <td>{{ item.error_info }}</td>
+        {% else %}
+        <td style="color: red;">{{ item.error_info }}</td>
+        {% endif %}
         <td>{{ item.verify_keyword }}</td>
         {% if item.result=='失败'%}
             <td bgcolor="red">{{ item.result }}</td>
