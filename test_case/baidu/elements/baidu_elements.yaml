@@ -15,6 +15,6 @@
 简书:
   简书首页输入框: xpath=//li/form/input[2]
   底部阅读更多: xpath=//a[text()="阅读更多"]
-  简书出版: xpath=//a[contains(text(),"简书出版1")]
+  简书出版: xpath=//a[contains(text(),"简书出版")]
 散文网:
   首条数据详情页: xpath=//ul[@class="tbody"]/li[1]

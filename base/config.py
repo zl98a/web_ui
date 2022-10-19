@@ -173,7 +173,7 @@ def report_email(items, report=None):
     template = Environment(loader=FileSystemLoader(os.path.join(rootPath, 'base/web'))).get_template(
         'template.html')  # 查找模板文件
     # 报告路径
-    report_path = os.path.join(rootPath, 'report/'+datetime.datetime.now().strftime('%Y_%m_%d')+'.html')
+    report_path = os.path.join(rootPath, 'report/'+datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')+'.html')
     with open(os.path.join(report_path), 'w+', encoding='utf-8') as f:
         out = template.render(
             title=results['标题'],

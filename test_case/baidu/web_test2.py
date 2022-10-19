@@ -11,10 +11,10 @@ from base.base_page import BasePage, get_driver
 
 
 class Case(object):
-    def __init__(self, case_file=None, element_file=None):
+    def __init__(self, case_file=None, element_file=None, browser='chrome'):
         self.filename = case_file  # 用例文件
         self.element_file = element_file  # 元素文件
-        self.driver = BasePage(get_driver(None))
+        self.driver = BasePage(get_driver(browser=browser))
         self.index = 1
         self.case_results_list = []  # 用例列表
         self.case_results_dict = {}  # 用例执行结果统计
@@ -84,6 +84,7 @@ class Case(object):
     }
 
     def run_case(self, file, many=None):
+        """运行用例"""
         data = read_yaml(file)  # 读取所有测试用例
         res = self.execute_case(data, many=many)  # 执行用例
         return res

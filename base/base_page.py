@@ -4,34 +4,20 @@ import warnings
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.edge.options import Options  # => 引入Chrome的配置
+# from selenium.webdriver.edge.options import Options  # => 引入Chrome的配置
 from selenium.webdriver.chrome.options import Options  # => 引入Chrome的配置
 from selenium.webdriver import ChromeOptions
 
 
-def get_driver(base_url=None):
+def get_driver(base_url=None, browser='chrome'):
     """获取driver对象"""
     warnings.simplefilter('ignore', ResourceWarning)
-    chrome_options = Options()
-    chrome_options.page_load_strategy = 'none'
-    # chrome_options.add_argument('--headless')
-    # chrome_options.add_argument('--disable-gpu')
-    option = ChromeOptions()
-    option.add_experimental_option('excludeSwitches', ['enable-automation'])
-    driver = webdriver.Chrome(executable_path=r'C:\pythonPro\multitasking\selenium_\chromedriver.exe',
-                              chrome_options=chrome_options, options=option)
-
-    # driver.delete_all_cookies()
-    # with open(os.path.join(root_path, 'base/jianshu.txt'), 'r') as f:
-    #     # 使用json读取cookies 注意读取的是文件 所以用load而不是loads
-    #     cookies_list = json.load(f)
-    #     # 方法2删除该字段
-    #     for cookie in cookies_list:
-    #         # 该字段有问题所以删除就可以
-    #         if 'expiry' in cookie:
-    #             del cookie['expiry']
-    #         driver.add_cookie(cookie)
-    #     driver.refresh()
+    caps = {
+        'platform': 'ANY',
+        'browserName': f'{browser}',
+        'version': '',
+    }
+    driver = webdriver.Remote('http://192.168.169.134:5001/wd/hub', desired_capabilities=caps)
     if base_url:
         driver.get(base_url)  # 打开初始页
     driver.maximize_window()
