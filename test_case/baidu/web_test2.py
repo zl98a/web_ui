@@ -1,63 +1,51 @@
-import os
 import sys
 import time
 import traceback
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium import webdriver
+
 import json
 
 sys.path.append(r'C:\pythonPro\web_ui')
 from base.config import init_page, rootPath
 from base.config import read_yaml, packing_parameters2, report_email, read_yaml2, query_case
-from selenium.webdriver.edge.options import Options
+from base.base_page import BasePage, get_driver
 
 
 class Case(object):
     def __init__(self, case_file=None, element_file=None):
         self.filename = case_file  # 用例文件
         self.element_file = element_file  # 元素文件
-        option = Options()
-        option.page_load_strategy = 'none'  # 加载策略
-        self.driver = webdriver.Edge(executable_path=os.path.join(rootPath, 'base/web/msedgedriver.exe'),
-                                     capabilities=option.to_capabilities())
-        # 设置等待
-        self.wait = WebDriverWait(self.driver, 5, 0.5)
-        self.driver.maximize_window()
+        self.driver = BasePage(get_driver(None))
         self.index = 1
         self.case_results_list = []  # 用例列表
         self.case_results_dict = {}  # 用例执行结果统计
         # 可以在初始化阶段登录
+        self.exception_flag = False  # 报错标识
 
     # 定义三个操作函数, 并保持参数签名统一
     def do_open(self, target, value=None, wait_time=None):
         print('打开页面', target)
-        self.driver.get(target)
+        self.driver.open(target)
 
     def do_type(self, target=None, value=None, wait_time=None):
         print(f'在 {target} 输入 {value}')
-        elm_loc = target.split('=', 1)  # 分割得到定位方式和定位器
-        self.wait_element(elm_loc).send_keys(value)
-
-    def wait_element(self, elm_loc):
-        return self.wait.until(lambda driver: driver.find_element(*elm_loc))
+        self.driver.input(loc=target, txt=value)
 
     def do_click(self, target, value=None, wait_time=None):
         print(f'点击 {target}')
-        elm_loc = target.split('=', 1)
-        self.wait_element(elm_loc).click()
+        self.driver.click(target)
 
     def do_back(self, target, value=None, wait_time=None):
         print('执行了返回操作。')
-        self.driver.back()  # 返回
+        self.driver.by_back()  # 返回
 
     def do_swipe(self, target, value=None, wait_time=None):
         print('滑动屏幕查找某个元素')
-        find_ele = self.pub_swipe_down(elm_loc=target)
+        find_ele = self.driver.pub_swipe_down(elm_loc=target)
         if not find_ele:
             print('没找到元素。')
             assert False
         try:
-            self.driver.execute_script("$(arguments[0]).click()", find_ele)
+            self.driver.execute_javascript(find_ele)
         except Exception as e:
             print(e)
 
@@ -70,39 +58,16 @@ class Case(object):
         time.sleep(wait_time)
 
     def jump_window_1(self, target, value=None, wait_time=None):
-        windows_handles = self.driver.window_handles
-        self.driver.switch_to.window(windows_handles[-1])  # 跳转句柄
+        self.driver.jump_handles()
 
     def jump_window_0(self, target, value=None, wait_time=None):
-        self.driver.switch_to.window(self.driver.window_handles[0])  # 还原句柄
+        try:
+            self.driver.jump_handles(0)
+        except:
+            pass
 
     def close_current_window(self, target, value=None, wait_time=None):
-        self.driver.close()  # 关闭当前浏览器窗口
-
-    def pub_swipe_down(self, elm_loc=None, error=False):
-        """下滑直至查找到某个元素"""
-        if not elm_loc:
-            print('swipe ele is not null!')
-            assert False
-        swipe_x = 0
-        for b in range(100):
-            try:
-                ele = elm_loc.split('=', 1)
-                find_ele = self.driver.find_element(*ele)
-            except Exception as e:
-                print(e)
-                self.driver.execute_script(f'window.scrollTo({swipe_x},{swipe_x + 300})')  # 下滑
-                swipe_x += 300
-                time.sleep(1)
-                if b == 20:  # 查找20次
-                    if error:
-                        assert False
-                    else:
-                        print('没有找到该元素~')
-                        return
-            else:
-                print('找到元素了。')
-                return find_ele
+        self.driver.close_()  # 关闭当前浏览器窗口
 
     # 使用字典做动作映射
     command_map = {
@@ -153,26 +118,31 @@ class Case(object):
                     self.case_results_dict['执行命令'] = command  # 用例执行命令
                     self.case_results_dict['操作元素'] = target  # 操作元素
                     self.case_results_dict['输入值'] = value  # 输入值
-                    verify_res, keyword = None, None
                     try:
                         func(self, target=target, value=value, wait_time=wait_time)  # 执行函数
                     except Exception as e:
                         print(e)
                         verify_res, keyword = self.keyword_verify(step)  # 接收检验结果
                         error_info = traceback.format_exc()
-                        self.case_results_dict['报错信息'] = str(error_info)
+                        self.case_results_dict['报错信息'] = str(error_info)+"\n"+str(step)
                         self.case_results_dict['运行结果'] = '失败'
+                        self.case_results_dict['报错步骤'] = str(step)
                         self.case_results_dict['校验结果'] = (lambda x: '成功' if x == 'True' else '失败')(verify_res)
                         self.case_results_dict['校验关键字'] = keyword
+                        # 失败重跑
+                        self.exception_flag = True
                     else:
                         verify_res, keyword = self.keyword_verify(step)  # 接收检验结果
                         self.case_results_dict['运行结果'] = '成功'
                         self.case_results_dict['报错信息'] = '无'
+                        self.case_results_dict['报错步骤'] = '无'
                         self.case_results_dict['校验关键字'] = keyword
                         self.case_results_dict['校验结果'] = (lambda x: '成功' if x == 'True' else '失败')(verify_res)
-
+                        self.exception_flag = False  # 还原，无报错
                     case_process_list.append(json.dumps(self.case_results_dict, ensure_ascii=False))
                     time.sleep(0.5)  # 每个用例执行完毕后，等待3s
+                    if self.exception_flag:
+                        break
                 self.case_results_list.append(case_process_list)  # 添加运行结果到列表里
                 if many:  # 执行单条用例
                     return self.case_results_list
@@ -180,6 +150,12 @@ class Case(object):
 
     def keyword_verify(self, step):
         """关键字校验函数"""
+        page_source = None
+        try:
+            page_source = self.driver.page_source()
+        except Exception as e:
+            print(e)
+        item = None
         verify_res = []
         try:
             item = step['keyword_verify']
@@ -189,12 +165,12 @@ class Case(object):
         else:  #
             if isinstance(item, list):  # 参数为列表
                 for ele in item:
-                    if ele in self.driver.page_source:
+                    if ele in page_source:
                         verify_res.append({ele: 'True'})
                     else:
                         verify_res.append({ele: 'False'})
             if isinstance(item, str) or isinstance(item, int):  # 参数为字符串 或 整型
-                if str(item) in self.driver.page_source:
+                if str(item) in page_source:
                     verify_res.append({item: 'True'})
                 else:
                     verify_res.append({item: 'False'})
@@ -232,12 +208,5 @@ class Case(object):
     def run(self, many=None, report=True):
         """总调度方法"""
         items = self.run_case(self.filename, many=many)  # 返回执行结果
-        self.driver.quit()
+        self.driver.quit_()
         report_email(items, report)
-
-
-if __name__ == "__main__":
-    case = Case(case_file='usecase/yaml_case.yaml', element_file='elements/baidu_elements.yaml')
-    # case.run(report=False, many={'case_module': '简书', 'case_name': '简书搜索'})  # 单条执行
-    case.run(many={}, report=False)  # 全部执行
-

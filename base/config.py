@@ -30,19 +30,22 @@ def deleteDuplicate(li):
     for case_name in list(set(tmp_case_list2)):
         repeat_case = [x for index, x in enumerate(flag_list) if
                        {k: v for k, v in x.items() if (k == "case_name" and v == case_name)}]
-
         flag = [item for item in repeat_case if item['verify_keyword'] != 'None']
         error_info_case = [item for item in repeat_case if item['error_info'] != '无']
+        print('error_info', error_info_case)
         if flag and error_info_case:
             verify_keyword_list = list(set([(item['verify_keyword'], item['result']) for item in flag]))
             flag[0]['verify_keyword'] = str(verify_keyword_list)
             flag[0]['error_info'] = error_info_case[0]['error_info']
             flag[0]['result'] = '失败'
+            flag[0]['error_step'] = error_info_case[0]['error_step']
             no_repeat_case_list.append(flag[0])
+
         elif not flag and error_info_case:
             repeat_case[0]['verify_keyword'] = 'None'
             repeat_case[0]['error_info'] = error_info_case[0]['error_info']
             repeat_case[0]['result'] = '失败'
+            repeat_case[0]['error_step'] = error_info_case[0]['error_step']
             no_repeat_case_list.append(repeat_case[0])
         elif flag and not error_info_case:
             verify_keyword_list = list(set([(item['verify_keyword'], item['result']) for item in flag]))
@@ -51,6 +54,7 @@ def deleteDuplicate(li):
                 flag[0]['result'] = '失败'
             else:
                 flag[0]['result'] = '成功'
+
             no_repeat_case_list.append(flag[0])
         else:  # 没有做校验
             tmp_failed_case = None
@@ -76,9 +80,21 @@ def deleteDuplicate(li):
         for d_tmp in li:
             if d_tmp['case_name'] == tmp_case_name:
                 li.remove(d_tmp)
-
-    new_results_itme = li + no_repeat_case_list
-    return new_results_itme
+    # new_results_itme = []
+    # for item in  li+no_repeat_case_list:
+    #     if item['result'] == '失败' and item['error_step'] != '无' and item['error_info'] != '无':
+    #         new_results_itme+=item
+    #     else:
+    #         # return
+    #         pass
+    # lis = li+no_repeat_case_list
+    # if '失败' in str(lis):
+    #     new_results_itme.append([item for item in lis if item['result'] == "失败"][0])
+    # elif '失败' not in str(lis) and "verify_keyword': 'None'" in str(lis):
+    #     new_results_itme.append([item for item in lis if item['verify_keyword'] and item['result'] == "成功"][0])
+    # elif '失败' not in str(lis) and "verify_keyword': 'None'" not in str(lis):
+    #     new_results_itme.append([item for item in lis if item['result'] == "成功"][0])
+    return li+no_repeat_case_list
 
 def read_yaml(file, encoding='utf-8'):
     """读取yaml"""
@@ -132,7 +148,7 @@ def report_email(items, report=None):
                 run_result = '失败'
             elif item2['校验结果'] == '失败' or item2['运行结果'] == '成功':
                 run_result = '失败'
-            r = {"run_step": item2['执行步骤'], "case_name": item2['name'], 'result': run_result, 'verify_keyword':item2['校验关键字'], 'error_info': item2['报错信息']}
+            r = {"run_step": item2['执行步骤'], "case_name": item2['name'], 'result': run_result, 'verify_keyword':item2['校验关键字'], 'error_info': item2['报错信息'], 'error_step': item2['报错步骤']}
             items_result.append(r)
     items_result = deleteDuplicate(items_result)
     failed_number = len([item for item in items_result if item['result'] == '失败'])

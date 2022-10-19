@@ -91,28 +91,29 @@
         target: 关键字输入框
         value: 简书官网
         depend: 首页
+
       - command: click
         target: 提交按钮
         depend: 首页
+
       - command: open
         target: https://www.jianshu.com/
       - command: click
         target: 简书首页输入框
+
       - command: type
         target: 简书首页输入框
         value: Python
+
       - command: swipe
         target: 底部阅读更多
-      - command: wait
-        wait_time: 3  # 强制等待
+
       - command: click
         target: 底部阅读更多
-      - command: wait
-        wait_time: 3  # 强制等待
+
       - command: click
         target: 简书出版
-      - command: wait
-        wait_time: 3
+
       - command: jump_window_1  # 跳转至新句柄
       - command: close_current_window  # 关闭当前串口
       - command: jump_window_0  # 还原句柄
@@ -130,3 +131,15 @@
       - command: jump_window_0  # 还原句柄
         keyword_verify: ['美文阅读', '散文']
   # 执行用例2时，页面会初始化至起始页面，之后再起始企业基础上，跟据用例执行操作
+
+    进入详情校验2: # 用例1
+      - command: open
+        target: https://www.meiwen.net.cn/wenzhang/jieri/
+      - command: click
+        target: 首条数据详情页
+      - command: jump_window_1  # 跳转至新句柄
+      - command: wait
+        wait_time: 3  # 等待3s
+      - command: close_current_window  # 关闭当前串口
+      - command: jump_window_0  # 还原句柄
+        keyword_verify: [ '美文阅读', '散文' ]

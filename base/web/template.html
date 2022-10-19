@@ -16,6 +16,7 @@
         <th style="background-color: aquamarine; font-weight: bold; color: blue;">用例名称</th>
         <th style="background-color: aquamarine">执行步骤</th>
         <th style="background-color: aquamarine">报错信息</th>
+        <th style="background-color: aquamarine">报错步骤</th>
         <th style="background-color: aquamarine">校验关键字</th>
 <!--        <th>校验结果</th>-->
         <th style="background-color: aquamarine">总结果</th>
@@ -31,6 +32,13 @@
         {% else %}
         <td style="color: red;">{{ item.error_info }}</td>
         {% endif %}
+
+        {% if item.error_step=='无'%}
+        <td>{{ item.error_step }}</td>
+        {% else %}
+        <td style="color: red;">{{ item.error_step }}</td>
+        {% endif %}
+
         <td>{{ item.verify_keyword }}</td>
         {% if item.result=='失败'%}
             <td bgcolor="red">{{ item.result }}</td>
