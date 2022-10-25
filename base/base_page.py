@@ -9,15 +9,15 @@ from selenium.webdriver.chrome.options import Options  # => 引入Chrome的配�
 from selenium.webdriver import ChromeOptions
 
 
-def get_driver(base_url=None, browser='chrome'):
+def get_driver(base_url=None, browser=None):
     """获取driver对象"""
     warnings.simplefilter('ignore', ResourceWarning)
     caps = {
         'platform': 'ANY',
-        'browserName': f'{browser}',
-        'version': '',
+        'browserName': f'{browser[0]}',
+        'version': f'{browser[1]}',
     }
-    driver = webdriver.Remote('http://192.168.169.134:5001/wd/hub', desired_capabilities=caps)
+    driver = webdriver.Remote('http://192.168.9.56:4444/wd/hub', desired_capabilities=caps)
     if base_url:
         driver.get(base_url)  # 打开初始页
     driver.maximize_window()

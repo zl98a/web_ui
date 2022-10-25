@@ -11,10 +11,11 @@ from base.base_page import BasePage, get_driver
 
 
 class Case(object):
-    def __init__(self, case_file=None, element_file=None, browser='chrome'):
+    def __init__(self, case_file=None, element_file=None, browser=None):
+        self.browser = browser
         self.filename = case_file  # 用例文件
         self.element_file = element_file  # 元素文件
-        self.driver = BasePage(get_driver(browser=browser))
+        self.driver = BasePage(get_driver(browser=self.browser))
         self.index = 1
         self.case_results_list = []  # 用例列表
         self.case_results_dict = {}  # 用例执行结果统计
@@ -210,4 +211,4 @@ class Case(object):
         """总调度方法"""
         items = self.run_case(self.filename, many=many)  # 返回执行结果
         self.driver.quit_()
-        report_email(items, report)
+        report_email(items, report, browser_name=self.browser)

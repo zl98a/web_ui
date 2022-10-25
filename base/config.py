@@ -1,6 +1,5 @@
 import os
 import sys
-import time
 
 import yaml
 sys.path.append('C:\pythonPro\web_ui')
@@ -132,7 +131,7 @@ def packing_parameters2(step):
         pass
     return command, target, value, wait_time
 
-def report_email(items, report=None):
+def report_email(items, report=None, browser_name=None):
     """生成报告和发送邮件"""
     case_number = len(items)  # 用例条数
     results = {}
@@ -173,7 +172,7 @@ def report_email(items, report=None):
     template = Environment(loader=FileSystemLoader(os.path.join(rootPath, 'base/web'))).get_template(
         'template.html')  # 查找模板文件
     # 报告路径
-    report_path = os.path.join(rootPath, 'report/'+datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')+'.html')
+    report_path = os.path.join(rootPath, 'report/'+datetime.datetime.now().strftime(f'{browser_name[0]+browser_name[1]}_%Y_%m_%d_%H_%M_%S')+'.html')
     with open(os.path.join(report_path), 'w+', encoding='utf-8') as f:
         out = template.render(
             title=results['标题'],

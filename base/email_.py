@@ -63,7 +63,7 @@ def mail(filepath='', log='', outputFolder='', phone='', app='', ver='', app_typ
         print('发送邮件成功。')
         return ret
 
-# ret=mail(filepath="D:\\auto-test\\test_result\\test_report\\我的页面.html",phone='redmi',ver='1.14')
+# ret=mail(filepath="D:\\auto-test.sh\\test_result\\test_report\\我的页面.html",phone='redmi',ver='1.14')
 # if ret:
 #     print('发送成功')
 # else:
