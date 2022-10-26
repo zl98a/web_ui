@@ -13,7 +13,9 @@ def run(browser):
 
 if __name__ == '__main__':
     with ThreadPoolExecutor(max_workers=2) as pool:
-        pool.map(run, [['chrome', '106.0'], ['chrome', '98.0'], ['MicrosoftEdge', '98.0'], ['MicrosoftEdge', '106.0'], ['MicrosoftEdge', '105.0'], ['firefox','96.0'] ])
-
-
-
+        pool.map(run, [['chrome', '106.0'],
+                       ['chrome', '98.0'],
+                       ['MicrosoftEdge', '98.0'],
+                       ['MicrosoftEdge', '106.0'],
+                       ['MicrosoftEdge', '105.0'],
+                       ['firefox', '96.0']])
